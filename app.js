@@ -1,25 +1,20 @@
 const express = require('express')
-const mongoose = require("mongoose")
+const morgan = require('morgan')
 const bodyParser = require('body-parser')
+const cors = require('cors')
+
 require('./db')
-require('./cron.js')
-
-
-const handlers = require('./lib/handlers.js')
+require('./cron')
 
 const app = express()
-const port = process.env.PORT || 3000
 
 // middlewares
-app.use(bodyParser.json())
+app.use(morgan('dev'))
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-
-app.get("/", handlers.home)
-app.get("/countries/:name", handlers.getCountries)
-
-
-app.listen(port, () => {
-  console.log(`Express started in ` +
-`${app.get('env')} mode at http://localhost:${port}` +
-`; press Ctrl-C to terminate.`)
-})
+app.use('/api', require('./lib/routes/api'))
+app.use('/users', require('./lib/routes/auth'))
+require('./lib/config/passport');
+module.exports = app
