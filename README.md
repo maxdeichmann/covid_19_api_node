@@ -6,4 +6,4 @@ This is an implementatioin of an API which provides covid-19 data from the Johns
 ## Execute
 ```bash
 npm start
-'''
+```
